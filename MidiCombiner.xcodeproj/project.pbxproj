@@ -7,19 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED1698802741EA6100841C0C /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED16987F2741EA6100841C0C /* AudioKit */; };
+		ED33811D2741C612009C9F4B /* MidiConductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33811C2741C612009C9F4B /* MidiConductor.swift */; };
+		ED33811F2741D0EC009C9F4B /* MidiDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33811E2741D0EC009C9F4B /* MidiDevice.swift */; };
 		EDCA56F3272F171B002E1320 /* MidiCombinerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA56F2272F171B002E1320 /* MidiCombinerApp.swift */; };
 		EDCA56F5272F171B002E1320 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA56F4272F171B002E1320 /* ContentView.swift */; };
 		EDCA56F7272F171D002E1320 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDCA56F6272F171D002E1320 /* Assets.xcassets */; };
 		EDCA56FA272F171D002E1320 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDCA56F9272F171D002E1320 /* Preview Assets.xcassets */; };
+		EDCA57052730B0AE002E1320 /* MidiMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA57042730B0AE002E1320 /* MidiMessage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		ED33811C2741C612009C9F4B /* MidiConductor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MidiConductor.swift; sourceTree = "<group>"; };
+		ED33811E2741D0EC009C9F4B /* MidiDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiDevice.swift; sourceTree = "<group>"; };
 		EDCA56EF272F171B002E1320 /* MidiCombiner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MidiCombiner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCA56F2272F171B002E1320 /* MidiCombinerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiCombinerApp.swift; sourceTree = "<group>"; };
 		EDCA56F4272F171B002E1320 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EDCA56F6272F171D002E1320 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EDCA56F9272F171D002E1320 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		EDCA56FB272F171D002E1320 /* MidiCombiner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MidiCombiner.entitlements; sourceTree = "<group>"; };
+		EDCA57042730B0AE002E1320 /* MidiMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiMessage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED1698802741EA6100841C0C /* AudioKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,8 +60,9 @@
 		EDCA56F1272F171B002E1320 /* MidiCombiner */ = {
 			isa = PBXGroup;
 			children = (
-				EDCA56F2272F171B002E1320 /* MidiCombinerApp.swift */,
+				EDCA57032730B084002E1320 /* midi */,
 				EDCA56F4272F171B002E1320 /* ContentView.swift */,
+				EDCA56F2272F171B002E1320 /* MidiCombinerApp.swift */,
 				EDCA56F6272F171D002E1320 /* Assets.xcassets */,
 				EDCA56FB272F171D002E1320 /* MidiCombiner.entitlements */,
 				EDCA56F8272F171D002E1320 /* Preview Content */,
@@ -67,6 +76,16 @@
 				EDCA56F9272F171D002E1320 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		EDCA57032730B084002E1320 /* midi */ = {
+			isa = PBXGroup;
+			children = (
+				ED33811C2741C612009C9F4B /* MidiConductor.swift */,
+				EDCA57042730B0AE002E1320 /* MidiMessage.swift */,
+				ED33811E2741D0EC009C9F4B /* MidiDevice.swift */,
+			);
+			path = midi;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -85,6 +104,9 @@
 			dependencies = (
 			);
 			name = MidiCombiner;
+			packageProductDependencies = (
+				ED16987F2741EA6100841C0C /* AudioKit */,
+			);
 			productName = MidiCombiner;
 			productReference = EDCA56EF272F171B002E1320 /* MidiCombiner.app */;
 			productType = "com.apple.product-type.application";
@@ -97,7 +119,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1310;
 				TargetAttributes = {
 					EDCA56EE272F171B002E1320 = {
 						CreatedOnToolsVersion = 13.0;
@@ -113,6 +135,9 @@
 				Base,
 			);
 			mainGroup = EDCA56E6272F171B002E1320;
+			packageReferences = (
+				ED16987E2741EA6100841C0C /* XCRemoteSwiftPackageReference "AudioKit" */,
+			);
 			productRefGroup = EDCA56F0272F171B002E1320 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -139,6 +164,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED33811D2741C612009C9F4B /* MidiConductor.swift in Sources */,
+				ED33811F2741D0EC009C9F4B /* MidiDevice.swift in Sources */,
+				EDCA57052730B0AE002E1320 /* MidiMessage.swift in Sources */,
 				EDCA56F5272F171B002E1320 /* ContentView.swift in Sources */,
 				EDCA56F3272F171B002E1320 /* MidiCombinerApp.swift in Sources */,
 			);
@@ -268,6 +296,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MidiCombiner/MidiCombiner.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -296,6 +325,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MidiCombiner/MidiCombiner.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -340,6 +370,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		ED16987E2741EA6100841C0C /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:AudioKit/AudioKit.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ED16987F2741EA6100841C0C /* AudioKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ED16987E2741EA6100841C0C /* XCRemoteSwiftPackageReference "AudioKit" */;
+			productName = AudioKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EDCA56E7272F171B002E1320 /* Project object */;
 }

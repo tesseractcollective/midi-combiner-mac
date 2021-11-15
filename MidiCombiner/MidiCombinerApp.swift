@@ -8,10 +8,11 @@
 import SwiftUI
 
 @main
-struct MidiCombinerApp: App {
+struct MidiCombinerApp: App {    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
     }
 }
+
