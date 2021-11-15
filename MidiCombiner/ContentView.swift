@@ -24,11 +24,11 @@ struct ContentView: View {
                            label: Text("Input")) {
                         
                         Text("None")
-                            .tag(nil as MidiDevice?)
+                            .tag(nil as MidiNoteDevice?)
                         
                         ForEach(0..<midiConductor.inputUIDs.count, id: \.self) { index in
                             Text("\(midiConductor.inputNames[index])")
-                                .tag(MidiDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiDevice?)
+                                .tag(MidiNoteDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiNoteDevice?)
                         }
                     }.padding()
                     
@@ -45,11 +45,11 @@ struct ContentView: View {
                            label: Text("Input")) {
                         
                         Text("None")
-                            .tag(nil as MidiDevice?)
+                            .tag(nil as MidiRhythmDevice?)
                         
                         ForEach(0..<midiConductor.inputUIDs.count, id: \.self) { index in
                             Text("\(midiConductor.inputNames[index])")
-                                .tag(MidiDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiDevice?)
+                                .tag(MidiRhythmDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiRhythmDevice?)
                         }
                     }.padding()
                     
@@ -58,6 +58,7 @@ struct ContentView: View {
                 }
             }
             
+            Text("Combined Virtual Instrument Out: \(midiConductor.combinedMessage?.description ?? "None")")
         }
         .padding().frame(minWidth:500.0)
     }

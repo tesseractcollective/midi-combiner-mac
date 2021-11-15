@@ -8,8 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		ED1698802741EA6100841C0C /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED16987F2741EA6100841C0C /* AudioKit */; };
+		ED1698822742125100841C0C /* MidiRhythmDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1698812742125100841C0C /* MidiRhythmDevice.swift */; };
 		ED33811D2741C612009C9F4B /* MidiConductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33811C2741C612009C9F4B /* MidiConductor.swift */; };
-		ED33811F2741D0EC009C9F4B /* MidiDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33811E2741D0EC009C9F4B /* MidiDevice.swift */; };
+		ED33811F2741D0EC009C9F4B /* MidiNoteDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33811E2741D0EC009C9F4B /* MidiNoteDevice.swift */; };
 		EDCA56F3272F171B002E1320 /* MidiCombinerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA56F2272F171B002E1320 /* MidiCombinerApp.swift */; };
 		EDCA56F5272F171B002E1320 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA56F4272F171B002E1320 /* ContentView.swift */; };
 		EDCA56F7272F171D002E1320 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDCA56F6272F171D002E1320 /* Assets.xcassets */; };
@@ -18,8 +19,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		ED1698812742125100841C0C /* MidiRhythmDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiRhythmDevice.swift; sourceTree = "<group>"; };
 		ED33811C2741C612009C9F4B /* MidiConductor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MidiConductor.swift; sourceTree = "<group>"; };
-		ED33811E2741D0EC009C9F4B /* MidiDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiDevice.swift; sourceTree = "<group>"; };
+		ED33811E2741D0EC009C9F4B /* MidiNoteDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiNoteDevice.swift; sourceTree = "<group>"; };
 		EDCA56EF272F171B002E1320 /* MidiCombiner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MidiCombiner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDCA56F2272F171B002E1320 /* MidiCombinerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiCombinerApp.swift; sourceTree = "<group>"; };
 		EDCA56F4272F171B002E1320 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -83,7 +85,8 @@
 			children = (
 				ED33811C2741C612009C9F4B /* MidiConductor.swift */,
 				EDCA57042730B0AE002E1320 /* MidiMessage.swift */,
-				ED33811E2741D0EC009C9F4B /* MidiDevice.swift */,
+				ED33811E2741D0EC009C9F4B /* MidiNoteDevice.swift */,
+				ED1698812742125100841C0C /* MidiRhythmDevice.swift */,
 			);
 			path = midi;
 			sourceTree = "<group>";
@@ -165,7 +168,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED33811D2741C612009C9F4B /* MidiConductor.swift in Sources */,
-				ED33811F2741D0EC009C9F4B /* MidiDevice.swift in Sources */,
+				ED33811F2741D0EC009C9F4B /* MidiNoteDevice.swift in Sources */,
+				ED1698822742125100841C0C /* MidiRhythmDevice.swift in Sources */,
 				EDCA57052730B0AE002E1320 /* MidiMessage.swift in Sources */,
 				EDCA56F5272F171B002E1320 /* ContentView.swift in Sources */,
 				EDCA56F3272F171B002E1320 /* MidiCombinerApp.swift in Sources */,

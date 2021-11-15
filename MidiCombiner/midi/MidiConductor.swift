@@ -3,18 +3,29 @@ import AudioKit
 import CoreMIDI
 import Combine
 
+struct PortDescription {
+    let UID: String
+    let manufacturer: String
+    let device: String
+}
+
 class MidiConductor: ObservableObject, MIDIListener {
     let virtualOutputUID: Int32 = 2_500_000
+    let virtualOutputName: String = "Combined Instrument"
+    var virtualOutputInfo: EndpointInfo?
     @Published var midi = MIDI()
-    @Published var noteInputDevice: MidiDevice?
-    @Published var rhythmInputDevice: MidiDevice?
+    @Published var noteInputDevice: MidiNoteDevice?
+    @Published var rhythmInputDevice: MidiRhythmDevice?
+    @Published var combinedMessage: MidiMessage?
     @Published var log = [MidiMessage]()
     
     init() {
-        midi.createVirtualOutputPorts(count: 1, uniqueIDs: [virtualOutputUID])
+        midi.createVirtualOutputPorts(count: 1, uniqueIDs: [virtualOutputUID], names: [virtualOutputName])
         midi.openOutput(uid: virtualOutputUID)
         midi.openInput()
         midi.addListener(self)
+        
+        virtualOutputInfo = midi.virtualOutputInfos[0]
     }
     
     var inputNames: [String] {
@@ -25,44 +36,6 @@ class MidiConductor: ObservableObject, MIDIListener {
     }
     var inputInfos: [EndpointInfo] {
         midi.inputInfos
-    }
-    var virtualInputNames: [String] {
-        midi.virtualInputNames
-    }
-    var virtualInputUIDs: [MIDIUniqueID] {
-        midi.virtualInputUIDs
-    }
-    var virtualInputInfos: [EndpointInfo] {
-        midi.virtualInputInfos
-    }
-    var destinationNames: [String] {
-        midi.destinationNames
-    }
-    var destinationUIDs: [MIDIUniqueID] {
-        midi.destinationUIDs
-    }
-    var destinationInfos: [EndpointInfo] {
-        midi.destinationInfos
-    }
-    var virtualOutputNames: [String] {
-        midi.virtualOutputNames
-    }
-    var virtualOutputUIDs: [MIDIUniqueID] {
-        midi.virtualOutputUIDs
-    }
-    var virtualOutputInfos: [EndpointInfo] {
-        midi.virtualOutputInfos
-    }
-
-    struct PortDescription {
-        var UID: String
-        var manufacturer: String
-        var device: String
-        init(withUID: String, withManufacturer: String, withDevice: String) {
-            self.UID = withUID
-            self.manufacturer = withManufacturer
-            self.device = withDevice
-        }
     }
 
     private let logSize = 30
@@ -80,14 +53,14 @@ class MidiConductor: ObservableObject, MIDIListener {
                 manufacturerString = info.manufacturer
                 deviceString = info.displayName
 
-                return PortDescription(withUID: UIDString,
-                                       withManufacturer: manufacturerString,
-                                       withDevice: deviceString)
+                return PortDescription(UID: UIDString,
+                                       manufacturer: manufacturerString,
+                                       device: deviceString)
             }
         }
-        return PortDescription(withUID: UIDString,
-                               withManufacturer: manufacturerString,
-                               withDevice: deviceString)
+        return PortDescription(UID: UIDString,
+                               manufacturer: manufacturerString,
+                               device: deviceString)
     }
     
     func appendToLog(message: MidiMessage) {
@@ -102,9 +75,43 @@ class MidiConductor: ObservableObject, MIDIListener {
         log.removeAll()
     }
     
-    func combine() {
-        if let _ = noteInputDevice, let _ = rhythmInputDevice {
+    func combine(message: MidiMessage) {
+        guard message.portUniqueID == rhythmInputDevice?.portUniqueID else {
+            return
+        }
+        
+        guard let noteInputDevice = noteInputDevice else {
+            print("no noteInputDevice")
+            return
+        }
+        guard let rhythmInputDevice = rhythmInputDevice else {
+            print("no rhythmInputDevice")
+            return
+        }
+        guard let rootNoteNumber = noteInputDevice.rootNoteNumber else {
+            print("no rootNoteNumber")
+            return
+        }
+        guard let triggerNoteNumber = rhythmInputDevice.triggerNoteNumber else {
+            print("no triggerNoteNumber")
+            return
+        }
+        guard let lastRhythmMessage = rhythmInputDevice.lastMessage else {
+            print("no triggerNoteNumber")
+            return
+        }
+        
+        if triggerNoteNumber == lastRhythmMessage.noteNumber {
+            let message = MidiMessage(
+                statusType: lastRhythmMessage.statusType,
+                channel: lastRhythmMessage.channel,
+                noteNumber: rootNoteNumber,
+                velocity: lastRhythmMessage.velocity,
+                portUniqueID: virtualOutputUID,
+                timeStamp: lastRhythmMessage.timeStamp)
             
+            combinedMessage = message
+            sendVirtual(message: message)
         }
     }
     
@@ -115,7 +122,7 @@ class MidiConductor: ObservableObject, MIDIListener {
             inputDevice.handle(message: message)
         }
         appendToLog(message: message)
-        combine()
+        combine(message: message)
     }
     
     // MARK: - receive
@@ -254,6 +261,45 @@ class MidiConductor: ObservableObject, MIDIListener {
                                    velocity: message.velocity,
                                    channel: message.channel,
                                    endpointsUIDs: portIDs)
+        default:
+            // Do Nothing
+            ()
+        }
+    }
+    
+    func sendVirtual(message: MidiMessage) {
+        guard let virtualOutputInfo = virtualOutputInfo else {
+            return
+        }
+        
+        let portIDs = [virtualOutputInfo.midiUniqueID]
+        let virtualPortIDs = [virtualOutputInfo.midiEndpointRef]
+        print("sendMessage: \(message.description)(\(message.statusType)), port: \(portIDs[0].description)")
+        
+        switch message.statusType {
+        case MIDIStatusType.controllerChange:
+            midi.sendControllerMessage(message.noteNumber,
+                                       value: message.velocity,
+                                       channel: message.channel,
+                                       endpointsUIDs: portIDs,
+                                       virtualOutputPorts: virtualPortIDs)
+        case MIDIStatusType.programChange:
+            midi.sendEvent(MIDIEvent(programChange: message.noteNumber,
+                                     channel: message.channel),
+                                     endpointsUIDs: portIDs,
+                                     virtualOutputPorts: virtualPortIDs)
+        case MIDIStatusType.noteOn:
+            midi.sendNoteOnMessage(noteNumber: message.noteNumber,
+                                   velocity: message.velocity,
+                                   channel: message.channel,
+                                   endpointsUIDs: portIDs,
+                                   virtualOutputPorts: virtualPortIDs)
+        case MIDIStatusType.noteOff:
+            midi.sendNoteOffMessage(noteNumber: message.noteNumber,
+                                   velocity: message.velocity,
+                                   channel: message.channel,
+                                   endpointsUIDs: portIDs,
+                                   virtualOutputPorts: virtualPortIDs)
         default:
             // Do Nothing
             ()
