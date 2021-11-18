@@ -22,6 +22,14 @@ class MidiRhythmDevice: ObservableObject, Hashable {
             return ""
         }
     }
+    var triggerInfo: MidiMessage? {
+        get {
+            guard let triggerNoteNumber = triggerNoteNumber else {
+                return nil
+            }
+            return MidiMessage(statusType: .noteOn, channel: 0, noteNumber: triggerNoteNumber, velocity: 0, portUniqueID: nil, timeStamp: nil)
+        }
+    }
     
     init(portUniqueID: MIDIUniqueID) {
         self.portUniqueID = portUniqueID
@@ -37,7 +45,7 @@ class MidiRhythmDevice: ObservableObject, Hashable {
     
     func handle(message: MidiMessage) {
         lastMessage = message
-        if (shouldSetTrigger) {
+        if (shouldSetTrigger && message.statusType == .noteOn) {
             triggerNoteNumber = message.noteNumber
             shouldSetTrigger = false
         }

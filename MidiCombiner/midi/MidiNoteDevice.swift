@@ -9,12 +9,21 @@ import Foundation
 import AudioKit
 import CoreMIDI
 
+enum NoteMode: Int, CaseIterable, Identifiable {
+    case root = 0
+    case lowest = 1
+    case all = 2
+    
+    var id: Int { self.rawValue }
+}
+
 class MidiNoteDevice: ObservableObject, Hashable {
     let portUniqueID: MIDIUniqueID
     var noteOnMessages: [MidiMessage] = []
     var noteOffMessages: [MidiMessage] = []
     var lastMessage: MidiMessage?
     var remember: Bool = false
+    var mode: NoteMode = .root
     var rootNoteNumber: MIDINoteNumber?
     var description: String {
         get { return noteOnMessages.map { $0.noteNameOctave }.joined(separator: " ") }

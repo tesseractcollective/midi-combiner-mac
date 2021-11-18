@@ -14,8 +14,8 @@ class MidiConductor: ObservableObject, MIDIListener {
     let virtualOutputName: String = "Combined Instrument"
     var virtualOutputInfo: EndpointInfo?
     @Published var midi = MIDI()
-    @Published var noteInputDevice: MidiNoteDevice?
-    @Published var rhythmInputDevice: MidiRhythmDevice?
+    @Published var noteInputDevice: MidiNoteDevice = MidiNoteDevice(portUniqueID: 0)
+    @Published var rhythmInputDevice: MidiRhythmDevice = MidiRhythmDevice(portUniqueID: 0)
     @Published var combinedMessage: MidiMessage?
     @Published var log = [MidiMessage]()
     
@@ -76,16 +76,7 @@ class MidiConductor: ObservableObject, MIDIListener {
     }
     
     func combine(message: MidiMessage) {
-        guard message.portUniqueID == rhythmInputDevice?.portUniqueID else {
-            return
-        }
-        
-        guard let noteInputDevice = noteInputDevice else {
-            print("no noteInputDevice")
-            return
-        }
-        guard let rhythmInputDevice = rhythmInputDevice else {
-            print("no rhythmInputDevice")
+        guard message.portUniqueID == rhythmInputDevice.portUniqueID else {
             return
         }
         guard let rootNoteNumber = noteInputDevice.rootNoteNumber else {
@@ -116,10 +107,10 @@ class MidiConductor: ObservableObject, MIDIListener {
     }
     
     func handle(message: MidiMessage) {
-        if let inputDevice = noteInputDevice, inputDevice.portUniqueID == message.portUniqueID {
-            inputDevice.handle(message: message)
-        } else if let inputDevice = rhythmInputDevice, inputDevice.portUniqueID == message.portUniqueID {
-            inputDevice.handle(message: message)
+        if noteInputDevice.portUniqueID == message.portUniqueID {
+            noteInputDevice.handle(message: message)
+        } else if rhythmInputDevice.portUniqueID == message.portUniqueID {
+            rhythmInputDevice.handle(message: message)
         }
         appendToLog(message: message)
         combine(message: message)

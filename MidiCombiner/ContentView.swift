@@ -14,50 +14,44 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            HStack {
-                VStack {
-                    Text("Note Source")
+            HStack(alignment: .top, spacing: 20) {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Note Source:")
                         .bold()
-                        .padding()
-                    
-                    Picker(selection: $midiConductor.noteInputDevice,
-                           label: Text("Input")) {
-                        
-                        Text("None")
-                            .tag(nil as MidiNoteDevice?)
-                        
+                        .alignmentGuide(HorizontalAlignment.center) { $0.width / 2 }
+                    Picker("Input", selection: $midiConductor.noteInputDevice) {
+                        Text("None").tag(MidiNoteDevice(portUniqueID: 0))
                         ForEach(0..<midiConductor.inputUIDs.count, id: \.self) { index in
                             Text("\(midiConductor.inputNames[index])")
-                                .tag(MidiNoteDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiNoteDevice?)
+                                .tag(MidiNoteDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiNoteDevice)
                         }
-                    }.padding()
-                    
-                    Text(midiConductor.noteInputDevice?.description ?? "")
-                        .padding()
+                    }
+                    Toggle("Remember Last Played", isOn: $midiConductor.noteInputDevice.remember)
+                        .toggleStyle(.switch)
+                    Picker("Note Mode", selection: $midiConductor.noteInputDevice.mode) {
+                        Text("Root").tag(NoteMode.root)
+                        Text("Lowest").tag(NoteMode.lowest)
+                        Text("All").tag(NoteMode.all)
+                    }.pickerStyle(.segmented)
+                    Text(midiConductor.noteInputDevice.description)
                 }
                 
-                VStack {
-                    Text("Rhythm Source")
-                        .bold()
-                        .padding()
-                    
-                    Picker(selection: $midiConductor.rhythmInputDevice,
-                           label: Text("Input")) {
-                        
-                        Text("None")
-                            .tag(nil as MidiRhythmDevice?)
-                        
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Rhythm Source:").bold()
+                    Picker("Input", selection: $midiConductor.rhythmInputDevice) {
+                        Text("None").tag(MidiRhythmDevice(portUniqueID: 0))
                         ForEach(0..<midiConductor.inputUIDs.count, id: \.self) { index in
                             Text("\(midiConductor.inputNames[index])")
-                                .tag(MidiRhythmDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiRhythmDevice?)
+                                .tag(MidiRhythmDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiRhythmDevice)
                         }
-                    }.padding()
-                    
-                    Text(midiConductor.rhythmInputDevice?.description ?? "")
-                        .padding()
+                    }
+                    Toggle("Learn Trigger", isOn: $midiConductor.rhythmInputDevice.shouldSetTrigger)
+                        .toggleStyle(.switch)
+                    Text("Trigger Note: \(midiConductor.rhythmInputDevice.triggerInfo?.noteNameOctave ?? "none")")
+                    Text(midiConductor.rhythmInputDevice.description)
                 }
             }
-            
+            Divider()
             Text("Combined Virtual Instrument Out: \(midiConductor.combinedMessage?.description ?? "None")")
         }
         .padding().frame(minWidth:500.0)
