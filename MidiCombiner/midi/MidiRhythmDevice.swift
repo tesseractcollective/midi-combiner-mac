@@ -9,10 +9,9 @@ import Foundation
 import AudioKit
 import CoreMIDI
 
-class MidiRhythmDevice: ObservableObject, Hashable {
-    let portUniqueID: MIDIUniqueID
+class MidiRhythmDevice: MidiDevice {
     var lastMessage: MidiMessage?
-    var triggerNoteNumber: MIDINoteNumber? = 36
+    var triggerNoteNumber: MIDINoteNumber = 36 // C2
     var shouldSetTrigger: Bool = false
     var description: String {
         get {
@@ -22,25 +21,8 @@ class MidiRhythmDevice: ObservableObject, Hashable {
             return ""
         }
     }
-    var triggerInfo: MidiMessage? {
-        get {
-            guard let triggerNoteNumber = triggerNoteNumber else {
-                return nil
-            }
-            return MidiMessage(statusType: .noteOn, channel: 0, noteNumber: triggerNoteNumber, velocity: 0, portUniqueID: nil, timeStamp: nil)
-        }
-    }
-    
-    init(portUniqueID: MIDIUniqueID) {
-        self.portUniqueID = portUniqueID
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(portUniqueID)
-    }
-    
-    static func == (lhs: MidiRhythmDevice, rhs: MidiRhythmDevice) -> Bool {
-        return (lhs.portUniqueID == rhs.portUniqueID)
+    var triggerInfo: MidiMessage {
+        return MidiMessage(statusType: .noteOn, channel: 0, noteNumber: triggerNoteNumber, velocity: 0, portUniqueID: nil, timeStamp: nil)
     }
     
     func handle(message: MidiMessage) {

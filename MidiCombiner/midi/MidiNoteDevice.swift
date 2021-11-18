@@ -17,39 +17,36 @@ enum NoteMode: Int, CaseIterable, Identifiable {
     var id: Int { self.rawValue }
 }
 
-class MidiNoteDevice: ObservableObject, Hashable {
-    let portUniqueID: MIDIUniqueID
+class MidiNoteDevice: MidiDevice {
+    let chordRecognizer = ChordRecognizer()
     var noteOnMessages: [MidiMessage] = []
     var noteOffMessages: [MidiMessage] = []
     var lastMessage: MidiMessage?
     var remember: Bool = false
     var mode: NoteMode = .root
     var rootNoteNumber: MIDINoteNumber?
+    var noteNumbers: [uint8] {
+        noteOnMessages.map { $0.noteNumber }
+    }
     var description: String {
-        get { return noteOnMessages.map { $0.noteNameOctave }.joined(separator: " ") }
-    }
-    
-    init(portUniqueID: MIDIUniqueID) {
-        self.portUniqueID = portUniqueID
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(portUniqueID)
-    }
-    
-    static func == (lhs: MidiNoteDevice, rhs: MidiNoteDevice) -> Bool {
-        return (lhs.portUniqueID == rhs.portUniqueID)
+        noteOnMessages.map { $0.noteNameOctave }.joined(separator: " ")
     }
     
     func calculateRootNoteNumber() {
         if noteOnMessages.count > 0 {
-            var noteNumber = noteOnMessages[0].noteNumber
-            for message in noteOnMessages {
-                if message.noteNumber < noteNumber {
-                    noteNumber = message.noteNumber
+            if mode == .root && noteOnMessages.count > 1 {
+                let chordGroups = chordRecognizer.notesToChord(midiNoteValues: noteNumbers)
+                let chord = chordGroups.first?.chords.first
+                rootNoteNumber = chord?.rootNote
+            } else {
+                var noteNumber = noteOnMessages[0].noteNumber
+                for message in noteOnMessages {
+                    if message.noteNumber < noteNumber {
+                        noteNumber = message.noteNumber
+                    }
                 }
+                rootNoteNumber = noteNumber
             }
-            rootNoteNumber = noteNumber
         } else {
             rootNoteNumber = nil
         }

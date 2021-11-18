@@ -47,12 +47,13 @@ struct ContentView: View {
                     }
                     Toggle("Learn Trigger", isOn: $midiConductor.rhythmInputDevice.shouldSetTrigger)
                         .toggleStyle(.switch)
-                    Text("Trigger Note: \(midiConductor.rhythmInputDevice.triggerInfo?.noteNameOctave ?? "none")")
+                    Text("Trigger Note: \(midiConductor.rhythmInputDevice.triggerInfo.noteNameOctave)")
                     Text(midiConductor.rhythmInputDevice.description)
                 }
             }
             Divider()
-            Text("Combined Virtual Instrument Out: \(midiConductor.combinedMessage?.description ?? "None")")
+            let description = midiConductor.combinedMessages.map{ $0.description }.joined(separator: " ")
+            Text("Combined Virtual Instrument Out: \(description)")
         }
         .padding().frame(minWidth:500.0)
     }

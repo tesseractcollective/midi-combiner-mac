@@ -9,6 +9,16 @@
 /* Begin PBXBuildFile section */
 		ED1698802741EA6100841C0C /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED16987F2741EA6100841C0C /* AudioKit */; };
 		ED1698822742125100841C0C /* MidiRhythmDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1698812742125100841C0C /* MidiRhythmDevice.swift */; };
+		ED16988F2746161E00841C0C /* ChordDefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1698842746161E00841C0C /* ChordDefs.swift */; };
+		ED1698902746161E00841C0C /* ChordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1698852746161E00841C0C /* ChordGenerator.swift */; };
+		ED1698912746161E00841C0C /* Designator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1698862746161E00841C0C /* Designator.swift */; };
+		ED1698922746161E00841C0C /* Tone.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1698872746161E00841C0C /* Tone.swift */; };
+		ED1698932746161E00841C0C /* Triad.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1698882746161E00841C0C /* Triad.swift */; };
+		ED1698942746161E00841C0C /* Chord.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1698892746161E00841C0C /* Chord.swift */; };
+		ED1698952746161E00841C0C /* ChordRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED16988A2746161E00841C0C /* ChordRecognizer.swift */; };
+		ED1698972746161E00841C0C /* ChordGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED16988D2746161E00841C0C /* ChordGroup.swift */; };
+		ED1698982746161E00841C0C /* MIDIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED16988E2746161E00841C0C /* MIDIConstants.swift */; };
+		ED16989A27461D9600841C0C /* MidiDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED16989927461D9600841C0C /* MidiDevice.swift */; };
 		ED33811D2741C612009C9F4B /* MidiConductor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33811C2741C612009C9F4B /* MidiConductor.swift */; };
 		ED33811F2741D0EC009C9F4B /* MidiNoteDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED33811E2741D0EC009C9F4B /* MidiNoteDevice.swift */; };
 		EDCA56F3272F171B002E1320 /* MidiCombinerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA56F2272F171B002E1320 /* MidiCombinerApp.swift */; };
@@ -20,6 +30,16 @@
 
 /* Begin PBXFileReference section */
 		ED1698812742125100841C0C /* MidiRhythmDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiRhythmDevice.swift; sourceTree = "<group>"; };
+		ED1698842746161E00841C0C /* ChordDefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChordDefs.swift; sourceTree = "<group>"; };
+		ED1698852746161E00841C0C /* ChordGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChordGenerator.swift; sourceTree = "<group>"; };
+		ED1698862746161E00841C0C /* Designator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Designator.swift; sourceTree = "<group>"; };
+		ED1698872746161E00841C0C /* Tone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tone.swift; sourceTree = "<group>"; };
+		ED1698882746161E00841C0C /* Triad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Triad.swift; sourceTree = "<group>"; };
+		ED1698892746161E00841C0C /* Chord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chord.swift; sourceTree = "<group>"; };
+		ED16988A2746161E00841C0C /* ChordRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChordRecognizer.swift; sourceTree = "<group>"; };
+		ED16988D2746161E00841C0C /* ChordGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChordGroup.swift; sourceTree = "<group>"; };
+		ED16988E2746161E00841C0C /* MIDIConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIDIConstants.swift; sourceTree = "<group>"; };
+		ED16989927461D9600841C0C /* MidiDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiDevice.swift; sourceTree = "<group>"; };
 		ED33811C2741C612009C9F4B /* MidiConductor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MidiConductor.swift; sourceTree = "<group>"; };
 		ED33811E2741D0EC009C9F4B /* MidiNoteDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiNoteDevice.swift; sourceTree = "<group>"; };
 		EDCA56EF272F171B002E1320 /* MidiCombiner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MidiCombiner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -43,6 +63,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		ED1698832746161E00841C0C /* ChordRecognizeGenerate */ = {
+			isa = PBXGroup;
+			children = (
+				ED1698842746161E00841C0C /* ChordDefs.swift */,
+				ED1698852746161E00841C0C /* ChordGenerator.swift */,
+				ED1698862746161E00841C0C /* Designator.swift */,
+				ED1698872746161E00841C0C /* Tone.swift */,
+				ED1698882746161E00841C0C /* Triad.swift */,
+				ED1698892746161E00841C0C /* Chord.swift */,
+				ED16988A2746161E00841C0C /* ChordRecognizer.swift */,
+				ED16988D2746161E00841C0C /* ChordGroup.swift */,
+				ED16988E2746161E00841C0C /* MIDIConstants.swift */,
+			);
+			path = ChordRecognizeGenerate;
+			sourceTree = "<group>";
+		};
 		EDCA56E6272F171B002E1320 = {
 			isa = PBXGroup;
 			children = (
@@ -83,9 +119,11 @@
 		EDCA57032730B084002E1320 /* midi */ = {
 			isa = PBXGroup;
 			children = (
+				ED1698832746161E00841C0C /* ChordRecognizeGenerate */,
 				ED33811C2741C612009C9F4B /* MidiConductor.swift */,
 				EDCA57042730B0AE002E1320 /* MidiMessage.swift */,
 				ED33811E2741D0EC009C9F4B /* MidiNoteDevice.swift */,
+				ED16989927461D9600841C0C /* MidiDevice.swift */,
 				ED1698812742125100841C0C /* MidiRhythmDevice.swift */,
 			);
 			path = midi;
@@ -169,9 +207,19 @@
 			files = (
 				ED33811D2741C612009C9F4B /* MidiConductor.swift in Sources */,
 				ED33811F2741D0EC009C9F4B /* MidiNoteDevice.swift in Sources */,
+				ED1698932746161E00841C0C /* Triad.swift in Sources */,
 				ED1698822742125100841C0C /* MidiRhythmDevice.swift in Sources */,
+				ED1698972746161E00841C0C /* ChordGroup.swift in Sources */,
+				ED1698922746161E00841C0C /* Tone.swift in Sources */,
 				EDCA57052730B0AE002E1320 /* MidiMessage.swift in Sources */,
+				ED1698942746161E00841C0C /* Chord.swift in Sources */,
 				EDCA56F5272F171B002E1320 /* ContentView.swift in Sources */,
+				ED16988F2746161E00841C0C /* ChordDefs.swift in Sources */,
+				ED1698902746161E00841C0C /* ChordGenerator.swift in Sources */,
+				ED1698952746161E00841C0C /* ChordRecognizer.swift in Sources */,
+				ED1698982746161E00841C0C /* MIDIConstants.swift in Sources */,
+				ED1698912746161E00841C0C /* Designator.swift in Sources */,
+				ED16989A27461D9600841C0C /* MidiDevice.swift in Sources */,
 				EDCA56F3272F171B002E1320 /* MidiCombinerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

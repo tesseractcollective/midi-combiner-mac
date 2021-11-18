@@ -16,7 +16,7 @@ class MidiConductor: ObservableObject, MIDIListener {
     @Published var midi = MIDI()
     @Published var noteInputDevice: MidiNoteDevice = MidiNoteDevice(portUniqueID: 0)
     @Published var rhythmInputDevice: MidiRhythmDevice = MidiRhythmDevice(portUniqueID: 0)
-    @Published var combinedMessage: MidiMessage?
+    @Published var combinedMessages: [MidiMessage] = []
     @Published var log = [MidiMessage]()
     
     init() {
@@ -79,31 +79,54 @@ class MidiConductor: ObservableObject, MIDIListener {
         guard message.portUniqueID == rhythmInputDevice.portUniqueID else {
             return
         }
-        guard let rootNoteNumber = noteInputDevice.rootNoteNumber else {
-            print("no rootNoteNumber")
-            return
-        }
-        guard let triggerNoteNumber = rhythmInputDevice.triggerNoteNumber else {
-            print("no triggerNoteNumber")
-            return
-        }
         guard let lastRhythmMessage = rhythmInputDevice.lastMessage else {
-            print("no triggerNoteNumber")
+            print("no lastRhythmMessage")
             return
         }
         
-        if triggerNoteNumber == lastRhythmMessage.noteNumber {
-            let message = MidiMessage(
+        func createMessage(noteNumber: uint8) -> MidiMessage {
+            return MidiMessage(
                 statusType: lastRhythmMessage.statusType,
                 channel: lastRhythmMessage.channel,
-                noteNumber: rootNoteNumber,
+                noteNumber: noteNumber,
                 velocity: lastRhythmMessage.velocity,
                 portUniqueID: virtualOutputUID,
-                timeStamp: lastRhythmMessage.timeStamp)
-            
-            combinedMessage = message
-            sendVirtual(message: message)
+                timeStamp: lastRhythmMessage.timeStamp
+            )
         }
+                
+        if rhythmInputDevice.triggerNoteNumber == lastRhythmMessage.noteNumber {
+            if lastRhythmMessage.statusType == .noteOn {
+                combinedMessages = []
+                
+                switch noteInputDevice.mode {
+                case .lowest: fallthrough
+                case .root:
+                    if let rootNoteNumber = noteInputDevice.rootNoteNumber {
+                        let message = createMessage(noteNumber: rootNoteNumber)
+                        combinedMessages = [message]
+                        sendVirtual(message: message)
+                    }
+                case .all:
+                    noteInputDevice.noteNumbers.forEach {
+                        let message = createMessage(noteNumber: $0)
+                        combinedMessages.append(message)
+                        sendVirtual(message: message)
+                    }
+                }
+                
+                if combinedMessages.count == 0 {
+                    print("No Combined Messages")
+                }
+            } else if lastRhythmMessage.statusType == .noteOff {
+                combinedMessages.forEach {
+                    let message = createMessage(noteNumber: $0.noteNumber)
+                    sendVirtual(message: message)
+                }
+            }
+        }
+        
+        
     }
     
     func handle(message: MidiMessage) {
