@@ -17,11 +17,11 @@ enum NoteMode: Int, CaseIterable, Identifiable {
     var id: Int { self.rawValue }
 }
 
-class MidiNoteDevice: MidiDevice {
+class MIDINoteDevice: MIDIDevice {
     let chordRecognizer = ChordRecognizer()
-    var noteOnMessages: [MidiMessage] = []
-    var noteOffMessages: [MidiMessage] = []
-    var lastMessage: MidiMessage?
+    var noteOnMessages: [MIDIMessage] = []
+    var noteOffMessages: [MIDIMessage] = []
+    var lastMessage: MIDIMessage?
     var remember: Bool = false
     var mode: NoteMode = .root
     var rootNoteNumber: MIDINoteNumber?
@@ -52,26 +52,25 @@ class MidiNoteDevice: MidiDevice {
         }
     }
     
-    func handle(message: MidiMessage) {
+    func handle(message: MIDIMessage) {
         lastMessage = message
         
-        switch(message.statusType) {
-        case .noteOn:
-            if remember && noteOnMessages.count == noteOffMessages.count {
-                noteOnMessages.removeAll()
-                noteOffMessages.removeAll()
-            }
-            noteOnMessages.append(message)
-            calculateRootNoteNumber()
-        case .noteOff:
+        if (message.statusType == .noteOff ||
+            (message.statusType == .noteOn && message.velocity == 0)
+        ) {
             if remember {
                 noteOffMessages.append(message)
             } else if let index = noteOnMessages.firstIndex(where: { $0.noteNumber == message.noteNumber }) {
                 noteOnMessages.remove(at: index)
             }
             calculateRootNoteNumber()
-        default:
-            ()
+        } else if (message.statusType == .noteOn) {
+            if remember && noteOnMessages.count == noteOffMessages.count {
+                noteOnMessages.removeAll()
+                noteOffMessages.removeAll()
+            }
+            noteOnMessages.append(message)
+            calculateRootNoteNumber()
         }
     }
 }

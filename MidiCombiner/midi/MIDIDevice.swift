@@ -9,7 +9,7 @@ import Foundation
 import CoreMIDI
 
 
-class MidiDevice: ObservableObject, Hashable {
+class MIDIDevice: ObservableObject, Hashable {
     let portUniqueID: MIDIUniqueID
     
     init(portUniqueID: MIDIUniqueID) {
@@ -20,7 +20,7 @@ class MidiDevice: ObservableObject, Hashable {
         hasher.combine(portUniqueID)
     }
     
-    static func == (lhs: MidiDevice, rhs: MidiDevice) -> Bool {
+    static func == (lhs: MIDIDevice, rhs: MIDIDevice) -> Bool {
         return (lhs.portUniqueID == rhs.portUniqueID)
     }
 }

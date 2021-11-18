@@ -9,17 +9,6 @@ import Foundation
 import AudioKit
 import CoreMIDI
 
-enum MidiCommand: UInt8 {
-    case NOTE_OFF = 0x08
-    case NOTE_ON = 0x09
-    case POLYPHONIC_AFTERTOUCH = 0x0a
-    case CONTROL_CHANGE = 0x0b
-    case PROGRAM_CHANGE = 0x0c
-    case CHANNEL_AFTERTOUCH = 0x0d
-    case PITCH_BEND_CHANGE = 0x0e
-    case MIDI_TIME_CODE_QUARTER_FRAME = 0xf1
-}
-
 let OCTAVE_SEMI_TONES = 12
 let NOTE_NAMES = [
     0: ["C"],
@@ -67,7 +56,7 @@ func noteNameOctaveFor(noteNumber: UInt8) -> String {
     return "\(noteNameFor(noteNumber: noteNumber))\(octaveFor(noteNumber: noteNumber))"
 }
 
-struct MidiMessage {
+struct MIDIMessage {
     let statusType: MIDIStatusType
     let channel: MIDIChannel
     let noteNumber: MIDINoteNumber

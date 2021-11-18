@@ -9,15 +9,15 @@ struct PortDescription {
     let device: String
 }
 
-class MidiConductor: ObservableObject, MIDIListener {
+class MIDICombiner: ObservableObject, MIDIListener {
     let virtualOutputUID: Int32 = 2_500_000
     let virtualOutputName: String = "Combined Instrument"
     var virtualOutputInfo: EndpointInfo?
     @Published var midi = MIDI()
-    @Published var noteInputDevice: MidiNoteDevice = MidiNoteDevice(portUniqueID: 0)
-    @Published var rhythmInputDevice: MidiRhythmDevice = MidiRhythmDevice(portUniqueID: 0)
-    @Published var combinedMessages: [MidiMessage] = []
-    @Published var log = [MidiMessage]()
+    @Published var noteInputDevice: MIDINoteDevice = MIDINoteDevice(portUniqueID: 0)
+    @Published var rhythmInputDevice: MIDIRhythmDevice = MIDIRhythmDevice(portUniqueID: 0)
+    @Published var combinedMessages: [MIDIMessage] = []
+    @Published var log = [MIDIMessage]()
     
     init() {
         midi.createVirtualOutputPorts(count: 1, uniqueIDs: [virtualOutputUID], names: [virtualOutputName])
@@ -63,7 +63,7 @@ class MidiConductor: ObservableObject, MIDIListener {
                                device: deviceString)
     }
     
-    func appendToLog(message: MidiMessage) {
+    func appendToLog(message: MIDIMessage) {
         log.insert(message, at: 0)
 
         if log.count > logSize {
@@ -75,7 +75,9 @@ class MidiConductor: ObservableObject, MIDIListener {
         log.removeAll()
     }
     
-    func combine(message: MidiMessage) {
+    func combine(message: MIDIMessage) {
+        print("\(message.description) \(message.statusType)")
+        
         guard message.portUniqueID == rhythmInputDevice.portUniqueID else {
             return
         }
@@ -84,8 +86,8 @@ class MidiConductor: ObservableObject, MIDIListener {
             return
         }
         
-        func createMessage(noteNumber: uint8) -> MidiMessage {
-            return MidiMessage(
+        func createMessage(noteNumber: uint8) -> MIDIMessage {
+            return MIDIMessage(
                 statusType: lastRhythmMessage.statusType,
                 channel: lastRhythmMessage.channel,
                 noteNumber: noteNumber,
@@ -129,7 +131,7 @@ class MidiConductor: ObservableObject, MIDIListener {
         
     }
     
-    func handle(message: MidiMessage) {
+    func handle(message: MIDIMessage) {
         if noteInputDevice.portUniqueID == message.portUniqueID {
             noteInputDevice.handle(message: message)
         } else if rhythmInputDevice.portUniqueID == message.portUniqueID {
@@ -146,7 +148,7 @@ class MidiConductor: ObservableObject, MIDIListener {
                             portID: MIDIUniqueID?,
                             timeStamp: MIDITimeStamp?) {
         DispatchQueue.main.async {
-            let message = MidiMessage(statusType: MIDIStatusType.noteOn,
+            let message = MIDIMessage(statusType: MIDIStatusType.noteOn,
                                       channel: channel,
                                       noteNumber: noteNumber,
                                       velocity: velocity,
@@ -162,7 +164,7 @@ class MidiConductor: ObservableObject, MIDIListener {
                              portID: MIDIUniqueID?,
                              timeStamp: MIDITimeStamp?) {
         DispatchQueue.main.async {
-            let message = MidiMessage(statusType: MIDIStatusType.noteOff,
+            let message = MIDIMessage(statusType: MIDIStatusType.noteOff,
                                       channel: channel,
                                       noteNumber: noteNumber,
                                       velocity: velocity,
@@ -178,7 +180,7 @@ class MidiConductor: ObservableObject, MIDIListener {
                                 portID: MIDIUniqueID?,
                                 timeStamp: MIDITimeStamp?) {
         DispatchQueue.main.async {
-            let message = MidiMessage(statusType: MIDIStatusType.controllerChange,
+            let message = MIDIMessage(statusType: MIDIStatusType.controllerChange,
                                       channel: channel,
                                       noteNumber: controller,
                                       velocity: value,
@@ -194,7 +196,7 @@ class MidiConductor: ObservableObject, MIDIListener {
                                 portID: MIDIUniqueID?,
                                 timeStamp: MIDITimeStamp?) {
         DispatchQueue.main.async {
-            let message = MidiMessage(statusType: MIDIStatusType.noteOff,
+            let message = MIDIMessage(statusType: MIDIStatusType.noteOff,
                                       channel: channel,
                                       noteNumber: noteNumber,
                                       velocity: pressure,
@@ -223,7 +225,7 @@ class MidiConductor: ObservableObject, MIDIListener {
                                    portID: MIDIUniqueID?,
                                    timeStamp: MIDITimeStamp?) {
         DispatchQueue.main.async {
-            let message = MidiMessage(statusType: MIDIStatusType.noteOff,
+            let message = MIDIMessage(statusType: MIDIStatusType.programChange,
                                       channel: channel,
                                       noteNumber: program,
                                       velocity: 0,
@@ -250,10 +252,9 @@ class MidiConductor: ObservableObject, MIDIListener {
     }
     
     // MARK: - Send
-    func send(message: MidiMessage, portIDs: [MIDIUniqueID]?) {
-        print("sendMessage")
+    func send(message: MIDIMessage, portIDs: [MIDIUniqueID]?) {
         if let portIDs = portIDs {
-            print("sendEvent, port: \(portIDs[0].description)")
+            print("sendMessage: \(message), port: \(portIDs[0].description)")
         }
         switch message.statusType {
         case MIDIStatusType.controllerChange:
@@ -281,7 +282,7 @@ class MidiConductor: ObservableObject, MIDIListener {
         }
     }
     
-    func sendVirtual(message: MidiMessage) {
+    func sendVirtual(message: MIDIMessage) {
         guard let virtualOutputInfo = virtualOutputInfo else {
             return
         }

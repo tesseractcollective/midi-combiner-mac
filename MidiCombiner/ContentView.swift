@@ -10,7 +10,7 @@ import AudioKit
 import CoreMIDI
 
 struct ContentView: View {
-    @StateObject var midiConductor: MidiConductor = MidiConductor()
+    @StateObject var midiConductor: MIDICombiner = MIDICombiner()
     
     var body: some View {
         VStack {
@@ -20,10 +20,10 @@ struct ContentView: View {
                         .bold()
                         .alignmentGuide(HorizontalAlignment.center) { $0.width / 2 }
                     Picker("Input", selection: $midiConductor.noteInputDevice) {
-                        Text("None").tag(MidiNoteDevice(portUniqueID: 0))
+                        Text("None").tag(MIDINoteDevice(portUniqueID: 0))
                         ForEach(0..<midiConductor.inputUIDs.count, id: \.self) { index in
                             Text("\(midiConductor.inputNames[index])")
-                                .tag(MidiNoteDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiNoteDevice)
+                                .tag(MIDINoteDevice(portUniqueID: midiConductor.inputUIDs[index]) as MIDINoteDevice)
                         }
                     }
                     Toggle("Remember Last Played", isOn: $midiConductor.noteInputDevice.remember)
@@ -39,10 +39,10 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Rhythm Source:").bold()
                     Picker("Input", selection: $midiConductor.rhythmInputDevice) {
-                        Text("None").tag(MidiRhythmDevice(portUniqueID: 0))
+                        Text("None").tag(MIDIRhythmDevice(portUniqueID: 0))
                         ForEach(0..<midiConductor.inputUIDs.count, id: \.self) { index in
                             Text("\(midiConductor.inputNames[index])")
-                                .tag(MidiRhythmDevice(portUniqueID: midiConductor.inputUIDs[index]) as MidiRhythmDevice)
+                                .tag(MIDIRhythmDevice(portUniqueID: midiConductor.inputUIDs[index]) as MIDIRhythmDevice)
                         }
                     }
                     Toggle("Learn Trigger", isOn: $midiConductor.rhythmInputDevice.shouldSetTrigger)
